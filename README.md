@@ -1,6 +1,6 @@
 # Automated Backup and Rotation Script with Google Drive Integration
 
-## 📌 Overview
+##  Overview of project
 
 This project automates the backup of a GitHub-hosted project (`ebs-volume-optimizer`) on an EC2 instance. It:
 - Creates timestamped `.zip` backups
