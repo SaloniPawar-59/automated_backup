@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# === CONFIG ===
+# ------- Configuration ----------------
 PROJECT_NAME="EBSVolumeOptimizer"
 SRC_DIR="$HOME/ebs-volume-optimizer"
 BACKUP_DIR="$HOME/backups/$PROJECT_NAME"
@@ -16,16 +16,16 @@ MONTHLY_KEEP=3
 NOTIFY=true
 WEBHOOK_URL="https://webhook.site/9944db75-7185-4a04-986d-157bc12a4883"
 
-# === CREATE ZIP ===
+# ------- Creating zip------------------
 mkdir -p "$BACKUP_DIR/$DATE"
 cd "$SRC_DIR" || exit 1
 zip -r "$BACKUP_DIR/$DATE/$ZIP_NAME" . >> "$LOG_FILE" 2>&1
 
-# === UPLOAD TO GOOGLE DRIVE ===
+# ------- Uploading to google drive ----
 rclone copy "$BACKUP_DIR/$DATE/$ZIP_NAME" "$REMOTE_NAME:$REMOTE_FOLDER" >> "$LOG_FILE" 2>&1
 UPLOAD_STATUS=$?
 
-# === ROTATION ===
+# ------- Rotation ---------------------
 rotate_backups() {
     find "$BACKUP_DIR" -type f -name "*.zip" | while read -r file; do
         file_date=$(basename "$file" | grep -oP '\d{8}_\d{6}' | cut -c1-8)
@@ -62,7 +62,7 @@ rotate_backups() {
 
 rotate_backups
 
-# === SEND NOTIFICATION ===
+# ---------- Sending Notification -----------------
 if [ "$UPLOAD_STATUS" -eq 0 ]; then
     echo "Backup Successful: $ZIP_NAME at $(date)" >> "$LOG_FILE"
     if [ "$NOTIFY" = true ]; then
